@@ -30,7 +30,7 @@ const Guest = mongoose.model('Guest', guestSchema);
 // 📌 API: Thêm khách mời
 app.post('/api/rsvp', async (req, res) => {
   try {
-    let { name, phone, attending, guests, message } = req.body;
+    let { name, attending, guests, message } = req.body;
 
     if (!name || attending === undefined) {
       return res.status(400).json({ error: 'Thiếu thông tin bắt buộc' });
@@ -41,7 +41,7 @@ app.post('/api/rsvp', async (req, res) => {
       attending = attending.toLowerCase() === 'yes' || attending === 'true';
     }
 
-    const newGuest = new Guest({ name, phone, attending, guests, message });
+    const newGuest = new Guest({ name, attending, guests, message });
     const savedGuest = await newGuest.save();
 
     res.json(savedGuest);
@@ -51,7 +51,6 @@ app.post('/api/rsvp', async (req, res) => {
   }
 });
 
-// 📌 API: Lấy danh sách khách mời
 // 📌 API: Lấy danh sách khách mời
 app.get('/api/guests', async (req, res) => {
   try {
@@ -65,7 +64,6 @@ app.get('/api/guests', async (req, res) => {
       const regex = new RegExp(search, 'i');
       filter.$or = [
         { name: regex },
-        { phone: regex },
         { message: regex }
       ];
     }
